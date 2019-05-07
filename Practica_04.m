@@ -12,10 +12,59 @@
 % 
 % 
 % # *Teorema fundamental del cálculo.*
+%
+% La integración numérica definida como $$ \int_{a}^{b}f(x) dx$ es el área
+% determinada por $f(x)$ entre el intervalo que va desde el valor _a_ hasta el
+% valor _b_. Para resolver la integración numérica utilizando el teorema
+% fundamental del cálculo, se tienen algunas condiciones:
 % 
+% # f(x) debe ser integrable (toda función contínua es integrable en un
+% intervalo).
+% # $\frac{dF(x)}{dx} = f(x)$.
 %
+% Por lo tanto:
+% $$ \int_{a}^{b}f(x) dx F(a) - F(b)$
+% 
+% Siendo $F(x)$ la antiderivada. Calcular la antiderivada puede ser difícil o
+% incluso imposible. Se muestra un ejemplo a continuación:
+% 
+% Calcular de -1 a 1, el área de $f(x)=e^{-x^{2}}$
+% 
+% Como $e^{-x^{2}}$ es contínua, es integrable.
 %
-%% Problema 1-PR04.
+% $$ \int_{-1}^{1}e^{-x^{2}} dx = \int_{-1}^{1}e^{-x^{2}} dx = F(1)-F(-1)$
+%
+% $\frac{dF(x)}{dx} = f(x)$, pero $F(x) es desconocida.$
+%
+% El método a aplicar aquí para hallar la antiderivada será la aproximación
+% con polinomios, eligiéndose el más sencillo, $P(x) = 1$. En código, para
+% comparación de los resultados, se integrará tanto $f(x)$ como $P(x)$. Dada la
+% forma de la expresión de $f(x)$, para integrarla se hará uso de la función
+% _*trapz*_ en vez de _*int*_:
+%
+%%
+x = -2:0.001:2;
+f = exp(-x.^2);
+p = 1.*(x>-1 & x<=1);
+subplot(1,1,1)
+plot(x ,f , 'k', 'LineWidth', 2);
+hold on
+plot(x,p, 'y--', 'LineWidth', 2);
+grid on;
+legend('f(x)','P(x)');
+x = [-1:0.1:1];
+f = exp(-x.^2);
+p = 1;
+F = trapz(x,f)
+syms x
+P = int(p,x,-1,1)
+%%
+% Como P(x) tiene más área que f(x), $$ \int_{-1}^{1}P(x) dx = 2$, por lo
+% tanto $$ \int_{-1}^{1}f(x) dx < 2$, y se puede observar en los resultados
+% dados por el código, $$ \int_{-1}^{1}f(x) dx = 1.4924 < 2$.
+
+
+%% Problema 1) - PR04.
 % Para fines prácticos, en la práctica se utilizarán dos funciones anónimas para definir 
 % a la función _escalón u(t)_ y el _pulso unitario p(t)_. Para la
 % convolución de señales se implementará la función *_convconm.m_*.

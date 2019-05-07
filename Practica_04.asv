@@ -12,10 +12,52 @@
 % 
 % 
 % # *Teorema fundamental del cálculo.*
+%
+% La integración numérica definida como $$ \int_{a}^{b}f(x) dx$ es el área
+% determinada por $f(x)$ entre el intervalo que va desde el valor _a_ hasta el
+% valor _b_. Para resolver la integración numérica utilizando el teorema
+% fundamental del cálculo, se tienen algunas condiciones:
 % 
+% # f(x) debe ser integrable (toda función contínua es integrable en un
+% intervalo).
+% # $\frac{dF(x)}{dx} = f(x)$.
 %
+% Por lo tanto:
+% $$ \int_{a}^{b}f(x) dx F(a) - F(b)$
+% 
+% Siendo $F(x)$ la antiderivada. Calcular la antiderivada puede ser difícil o
+% incluso imposible. Se muestra un ejemplo a continuación:
+% 
+% Calcular de -1 a 1, el área de $f(x)=e^{-x^{2}}$
+% 
+% Como $e^{-x^{2}}$ es contínua, es integrable.
 %
-%% Problema 1-PR04.
+% $$ \int_{-1}^{1}e^{-x^{2}} dx = \int_{-1}^{1}e^{-x^{2}} dx = F(1)-F(-1)$
+%
+% $\frac{dF(x)}{dx} = f(x)$, pero $F(x) es desconocida.$
+%
+% El método a aplicar aquí para hallar la antiderivada será la aproximación
+% con polinomios, eligiéndose el más sencillo, $P(x) = 1$. En código, para
+% comparación de los resultados, se integrará tanto $f(x)$ como $P(x)$. Dada la
+% forma de la expresión de $f(x)$, para integrarla se hará uso de la función
+% _*trapz*_ en vez de _*int*_:
+%
+%%
+x = -2:0.001:2;
+f = exp(-x.^2);
+p = 1;
+subplot(2,2,1)
+plot(x,f)
+
+x = [-1:0.1:1];
+F = trapz(x,f)
+syms x
+P = int(p,x,-1,1)
+%%
+% Se puede notar
+
+
+%% Problema 1) - PR04.
 % Para fines prácticos, en la práctica se utilizarán dos funciones anónimas para definir 
 % a la función _escalón u(t)_ y el _pulso unitario p(t)_. Para la
 % convolución de señales se implementará la función *_convconm.m_*.
@@ -75,13 +117,17 @@ conv3 = int(tau-1,tau,t-1,2)
 %
 % <<31.PNG>>
 %
-% Como comprobación, se compara el resultado del proceso analítico con el
-% de la función _*convconm.m*_ donde se puede apreciar que se ha llegado al mismo resultado:
 %%
 t = -1:0.001:4;
 C_fg = (-t.^2/2+t).*p(t)+((t-1).^2/2+(t-2).^2/2).*p(t-1)+(-((t-1).*(t-3))/2).*p(t-2);
+subplot(1,1,1)
 plot(t, C_fg, 'r', 'LineWidth', 2); grid on;
 xlabel('t'); title('C_{f(t)g(t)} = f(t)*g(t)');
+%%
+% Como comprobación, se compara el resultado del proceso analítico con el
+% de la función _*convconm.m*_ donde se puede apreciar que se ha llegado al mismo resultado:
+
+%%
 convconm(f,g,0,4,0)
 %% Ejercicio 3) - PR04.
 %
@@ -134,13 +180,16 @@ conv4 = int(1,tau,t-3,2)
 %
 % <<33.PNG>>
 %
-% Como comprobación, se compara el resultado del proceso analítico con el
-% de la función _*convconm.m*_ donde se puede apreciar que se ha llegado al mismo resultado:
 %%
 t = 0:0.001:6;
 C_fg = ((t-1).^2/2).*p(t-1)+(t-3/2).*p(t-2)+(3/2-(t-3).^2/2).*p(t-3)+(5-t).*p(t-4);
+subplot(1,1,1)
 plot(t, C_fg, 'r', 'LineWidth', 2); grid on;
 xlabel('t'); title('C_{f(t)g(t)} = f(t)*g(t)');
+%%
+% Como comprobación, se compara el resultado del proceso analítico con el
+% de la función _*convconm.m*_ donde se puede apreciar que se ha llegado al mismo resultado:
+%%
 convconm(f,g,0,6,0)
 %% Ejercicio e) - PR06.
 %
@@ -201,13 +250,17 @@ i6 = int(-1,tau,-t,4)
 %
 % <<e6.PNG>>
 %
-% Como comprobación, se compara el resultado del proceso analítico con el
-% de la función _*convconm.m*_ donde se puede apreciar que se ha llegado al mismo resultado:
 %%
 t = -5:0.001:5;
 Rx1x1 = (t-4).*p(t-3)+(2-t).*p((t-1)/2)+(4-3*t).*p(t)+(3*t+4).*p(t+1)+(t+2).*p((t+3)/2)+(-t-4).*p(t+4);
+subplot(1,1,1)
 plot(t, Rx1x1, 'm', 'LineWidth', 2); grid on;
 xlabel('t'); title('R_{x_1(t)x_1(t)} = x_1(t)**x_1(t)');
+%%
+% Como comprobación, se compara el resultado del proceso analítico con el
+% de la función _*convconm.m*_ donde se puede apreciar que se ha llegado al mismo resultado:
+
+%%
 convconm(x1,x1,-5,5,1);
 %
 %% Ejercicio f) - PR06.
@@ -273,13 +326,16 @@ i7 = int(-1,tau,-t,4)
 % La descripción de la nueva señal generada por la correlación de $x_0(t)$ y $x_1(t)$ queda escrita como:
 %
 % <<f6.PNG>>
-%t = -5:0.001:5;
+%
+%%
+t = -5:0.001:5;
 Rx0x1 = (-t-4).*p(t+4)+(t+2).*p(t+3)+(3*t+6).*p(t+2)+(2-t).*p(t+1)+(2-3*t).*p(t)+(-t).*p(t-1)+(t-4).*p((t-2)/2);
+subplot(1,1,1)
 plot(t,Rx0x1, 'm', 'LineWidth', 2);grid on;
+xlabel('t'); title('R_{x_0(t)x_1(t)} = x_0(t)**x_1(t)');
+%%
 % Como comprobación, se compara el resultado del proceso analítico con el
 % de la función _*convconm.m*_ donde se puede apreciar que se ha llegado al mismo resultado:
 %%
-
-xlabel('t'); title('R_{x_0(t)x_1(t)} = x_0(t)**x_1(t)');
 convconm(x0,x1,-4.5,5,1);
 %
